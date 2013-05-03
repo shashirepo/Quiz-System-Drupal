@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+</head>
+
+<body background=sas.jpg>
+<div style="position:absolute;top:900;left:700;">
+ 
+   
+  
+</div>
+<?php 
+  
+       include("upload.php");
+  ?>
+<form name="register" action="get.php" method="POST">
+
+<table width="1079" border="0" cellspacing="4" cellpadding="4">
+  <tr>
+    <td colspan="2" align="center"><h1>REGISTER NOW N GET ACCESS TO ANY COURSE </h1></td>
+  </tr>
+  <tr>
+    <td width="454" align="center">FIRST NAME </td>
+    <td width="591"><input type="text" name="first" /></td>
+  </tr>
+  <tr>
+    <td height="36" align="center">LAST NAME </td>
+    <td><input type="text" name="last" /></td>
+  </tr>
+  <tr>
+    <td align="center">PASSWORD </td>
+    <td><input type="password" name="password" /></td>
+  </tr>
+  <tr>
+    <td align="center">AGE</td>
+    <td><input type="text" name="age" /></td>
+  </tr>
+  <tr>
+    <td align="center">GENDER</td>
+    <td><input type="radio" name="gen" value=male checked="checked" />
+      MALE
+        <input type="radio"  value="female" name="gen" />
+      FEMALE</td>
+  </tr>
+  <tr>
+    <td align="center">PHONE NO. </td>
+    <td><input type="text" name="cel" /></td>
+  </tr>
+  <tr>
+    <td height="49" align="center">E-MAIL </td>
+    <td><input type="text" name=mail /></td>
+  </tr>
+  <tr>
+    <td align="center">COURSE</td>
+	<td>
+	  COURSES    
+	    <select name="courses">
+          <option value="LINUX" selected="selected" name=linux>linux </option>
+          <option value="php" name=php>php</option>
+          <option value="CCNA" name=ccna>CCNA</option>
+          <option value="rhce" name=rhce>RHCE</option>
+        </select></td>
+  </tr>
+  <tr>
+    <td align="center">ID NO. </td>
+    <td><input type=text name=id /></td>
+  </tr>
+  <tr>
+    <td align="center">ADDRESS</td>
+    <td><input type="text" name="add" /></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><input type="submit" name=sub /></td>
+  </tr>
+</table>
+UPLOAD UR RESUME NOW...<input type="file" name="upload" />
+</body>
+
+
+</html>

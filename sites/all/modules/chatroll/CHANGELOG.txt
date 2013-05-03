@@ -1,0 +1,5 @@
+$Id: CHANGELOG.txt,v 1.1 2010/05/09 14:19:59 chatroll Exp $
+
+Chatroll Live Chat 6.x-1.0, 2010-05-09
+======================================
+Initial release of chatroll module. Supports Drupal 6.x.

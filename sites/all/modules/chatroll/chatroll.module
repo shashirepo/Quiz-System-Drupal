@@ -1,0 +1,141 @@
+<?php
+// $Id: chatroll.module,v 1.1 2010/05/09 14:19:59 chatroll Exp $
+
+/**
+ * Implementation of hook_help()
+ */
+function chatroll_help($path, $arg) {
+  $output = '';
+  switch ($path) {
+    case 'admin/help#chatroll':
+      $output = '<p>' . t('Have questions?  Please contact Chatroll Support at <a href="@support-url">@support-display-url</a>.', array('@support-url' => 'http://chatroll.com/help/support?r=drupal-module', '@support-display-url' => 'http://chatroll.com/help/support')) . '</p>';
+      break;
+  }
+  return $output;
+}
+
+
+/**
+ * Implementation of hook_perm().
+ */
+function chatroll_perm() {
+  // Array of valid permissions for Chatroll module: 
+  //   This permission is used to generate the ismod SSO param
+  return array('moderate chatroll');
+}
+
+
+/**
+ * Implementation of hook_block()
+ */
+function chatroll_block($op = 'list', $delta = 0, $edit = array()) {
+  if (user_access('access content')) {
+    switch ($op) {
+      case 'list':
+        // Define two Blocks, to make it easy to embed the same chatroll in 
+        // different formats: sidebar and content body
+        // e.g. user can choose to embed a chat on the sidebar, and/or 
+        // create a dedicated chat page
+        // Users looking to embed additional chats will need the MultiBlock 
+        // module (http://drupal.org/project/multiblock)
+        // or integrate using PHP snippets inside node content
+
+        // Cache PER USER, since Single Sign On (SSO) parameters will vary 
+        // for each user
+        return array(
+          'chatroll_sidebar' => array('info' => t('Chatroll: Sidebar'), 'cache' => BLOCK_CACHE_PER_USER),
+          'chatroll_content' => array('info' => t('Chatroll: Content'), 'cache' => BLOCK_CACHE_PER_USER),
+        );
+        break;
+
+      case 'configure':
+        // Note: We allow different embed HTML config for each block, for different size/color/format 
+        $form['chatroll_shortcode_' . $delta] = array(
+          '#type' => 'textfield',
+          '#size' => 80,
+          '#maxlength' => 200,
+          '#title' => t('Chatroll Shortcode'),
+          '#default_value' => variable_get('chatroll_shortcode_' . $delta, ''),
+          '#description' => t("Copy and paste your Chatroll Shortcode here. Your Shortcode can be found on your Chatroll's <strong>Settings</strong> -> <strong>Widget</strong> -> <strong>Install</strong> page on <a href='@chatroll-url'>!chatroll-domain</a>", array('@chatroll-url' => 'http://chatroll.com', '!chatroll-domain' => 'chatroll.com')),
+          '#required' => TRUE,
+        );
+
+        $form['chatroll_width_' . $delta] = array(
+          '#type' => 'textfield',
+          '#title' => t('Width'),
+          '#default_value' => variable_get('chatroll_width_' . $delta, '100%'),
+          '#size' => 5,
+          '#maxlength' => 5,
+          '#description' => t('Set the width of your Chatroll'),
+          '#required' => TRUE,
+        );
+        $form['chatroll_height_' . $delta] = array(
+          '#type' => 'textfield',
+          '#title' => t('Height'),
+          '#default_value' => variable_get('chatroll_height_' . $delta, '300'),
+          '#size' => 5,
+          '#maxlength' => 5,
+          '#description' => t("Set the height of your Chatroll."),
+          '#required' => TRUE,
+        );
+        return $form;
+        break;
+    
+      case 'save':
+        variable_set('chatroll_shortcode_' . $delta, $edit['chatroll_shortcode_' . $delta]);
+        variable_set('chatroll_width_' . $delta, $edit['chatroll_width_' . $delta]);
+        variable_set('chatroll_height_' . $delta, $edit['chatroll_height_' . $delta]);
+        break;
+
+      case 'view':
+        $block = array();
+        $block['content'] = chatroll_render_block($delta);
+        return $block;
+        break;
+    }
+  }
+}
+
+/**
+ * Implementation of hook_theme()
+ */
+function chatroll_theme() {
+  return array(
+    'chatroll_iframe' => array(
+      'arguments' => array(
+        'attributes' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Render Chatroll IFrame theme hook
+ *
+ * Renders Chatroll IFrame HTML.
+ *
+ * @param $attributes
+ *    IFrame attributes, including the src URL to the hosted Chatroll instance
+ */
+function theme_chatroll_iframe($attributes = array()) {
+  return '<iframe ' . drupal_attributes($attributes) . '></iframe>';
+}
+
+/**
+ * Render Chatroll Block
+ *
+ * Renders Chatroll based on the block configuration values.
+ *
+ * @param $delta
+ *   Integer identifier of the specific Chatroll block.
+ */
+function chatroll_render_block($delta) {
+  module_load_include('inc', 'chatroll', 'chatroll.drupal');
+  $chatroll = new Chatroll();
+
+  $chatroll->width= check_plain(variable_get('chatroll_width_' . $delta, ''));
+  $chatroll->height = check_plain(variable_get('chatroll_height_' . $delta, ''));
+
+  // Shortcode syntax is validated within Chatroll class, does not need check_plain().
+  return $chatroll->renderChatrollHtmlFromShortcode(variable_get('chatroll_shortcode_' . $delta, ''));
+}

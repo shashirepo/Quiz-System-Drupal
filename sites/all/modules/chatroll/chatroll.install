@@ -1,0 +1,17 @@
+<?php
+// $Id: chatroll.install,v 1.1 2010/05/09 14:19:59 chatroll Exp $
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function chatroll_uninstall() {
+  // Reference: http://zzolo.org/thoughts/tip-managing-variables-drupal-module
+  // Get global variable array
+  global $conf;
+  foreach (array_keys($conf) as $key) {
+    // Find variables that have the 'chatroll_' module prefix
+    if (strpos($key, 'chatroll_') == 0) {
+      variable_del($key);
+    }
+  }
+}

@@ -1,0 +1,11 @@
+; $Id: chatroll.info,v 1.1 2010/05/09 14:19:59 chatroll Exp $
+name = Chatroll
+description = Adds Chatroll live chat / shoutbox to your Drupal site.
+core = 6.x
+
+; Information added by drupal.org packaging script on 2010-05-26
+version = "6.x-1.0"
+core = "6.x"
+project = "chatroll"
+datestamp = "1274897703"
+
